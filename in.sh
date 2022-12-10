@@ -1,6 +1,4 @@
 #!/bin/sh
-vpndomain=$1;
-passwordvpndomain=$2;
 
 read -p "Please enter vpn domain:" domainnamevpn
 read -p "Please enter vpn domain password: ASOSsosa67 " domainnamevpnpw
