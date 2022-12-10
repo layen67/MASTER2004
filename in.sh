@@ -117,7 +117,7 @@ networks:
 cd /var/lib/docker/kl/wirguard;
 docker-compose up -d;
 sleep 30;
-apt install openresolv;
+apt install openresolv -y;
 
 
 
