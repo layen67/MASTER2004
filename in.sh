@@ -2,6 +2,9 @@
 vpndomain=$1;
 passwordvpndomain=$2;
 
+read -p "Please enter vpn domain:" domainnamevpn
+read -p "Please enter vpn domain password: ASOSsosa67 " domainnamevpnpw
+
 set -e
 
 apt-get update;apt-get install -y docker.io;
@@ -56,43 +59,55 @@ mkdir /var/lib/docker/kl/wirguard;
 
 echo "
 version: "3.8"
-services:
-  wg-easy:
-    environment:
-      # ⚠️ Required:
-      # Change this to your host's public address
-      - WG_HOST=$1
 
-      # Optional:
-      - PASSWORD=$2
-      - WG_PORT=51920
-      - WG_DEFAULT_ADDRESS=10.8.0.x
-      - WG_DEFAULT_DNS=1.1.1.1
-      - WG_MTU=1450
-      - WG_ALLOWED_IPS=192.0.0.0/8, 10.0.0.0/8
-      - WG_PERSISTENT_KEEPALIVE=25
-      
-    image: weejewel/wg-easy
-    container_name: wg-easy
-    volumes:
-      - /root/umbrel/elianova/wireguard:/etc/wireguard
-    ports:
-      - "51920:51820/udp"
-      - "51821:51821/tcp"
+services:
+  adwireguard:
+    container_name: adwireguard
+    # image: ghcr.io/iganeshk/adwireguard-dark:latest
+    image: iganesh/adwireguard-dark:latest
     restart: unless-stopped
+    ports:
+      - '53:53'           # AdGuardHome DNS Port
+      - '3000:3000'       # Default Address AdGuardHome WebUI
+      - '853:853'         # DNS-TLS
+      - '51920:51820/udp' # wiregaurd port
+      - '51821:51821/tcp' # wg-easy webUI
+    environment:
+        # WG-EASY ENVS
+      - WG_HOST=domainnamevpn
+      - PASSWORD=domainnamevpnpw
+      - WG_PORT=51820
+      - WG_DEFAULT_ADDRESS=10.10.11.x
+      - WG_DEFAULT_DNS=10.10.10.2
+      - WG_MTU=1420
+    volumes:
+        # adguard-home volume
+      - './adguard/work:/opt/adwireguard/work'
+      - './adguard/conf:/opt/adwireguard/conf'
+        # wg-easy volume
+      - './wireguard:/etc/wireguard'
     cap_add:
-      # this is dropped by portianer but keep it for clarity (and future?)
       - NET_ADMIN
-    deploy:
-      labels:
-        io.portainerhack.cap_add: NET_ADMIN,SYS_MODULE
-      mode: replicated
-      replicas: 1
+      - SYS_MODULE
     sysctls:
       - net.ipv4.ip_forward=1
       - net.ipv4.conf.all.src_valid_mark=1
+      - net.ipv6.conf.all.disable_ipv6=1    # Disable IPv6
+    networks:
+      vpn_net:
+        ipv4_address: 10.10.10.2
+
+networks:
+  vpn_net:
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.10.10.0/24
 "> /var/lib/docker/kl/wirguard/docker-compose.yml;
 cd /var/lib/docker/kl/wirguard;
 docker-compose up -d;
+sleep 30;
+
+
 
 
