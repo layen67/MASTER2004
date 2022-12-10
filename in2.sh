@@ -76,6 +76,7 @@ services:
     image: iganesh/adwireguard-dark:latest
     restart: unless-stopped
     ports:
+      - '8088:80'           # AdGuardHome DNS Port
       - '53:53'           # AdGuardHome DNS Port
       - '3000:3000'       # Default Address AdGuardHome WebUI
       - '853:853'         # DNS-TLS
@@ -86,8 +87,8 @@ services:
       - WG_HOST=vpn.$domainname
       - PASSWORD=$domainnamevpnpw
       - WG_PORT=51920
-      - WG_DEFAULT_ADDRESS=10.10.10.x
-      - WG_DEFAULT_DNS=10.10.11.2
+      - WG_DEFAULT_ADDRESS=10.10.11.x
+      - WG_DEFAULT_DNS=10.10.10.2
       - WG_MTU=1420
       - WG_ALLOWED_IPS=192.0.0.0/8, 10.0.0.0/8
       - WG_PERSISTENT_KEEPALIVE=25
@@ -106,14 +107,14 @@ services:
       - net.ipv6.conf.all.disable_ipv6=1    # Disable IPv6
     networks:
       vpn_net:
-        ipv4_address: 10.10.11.2
+        ipv4_address: 10.10.10.2
 
 networks:
   vpn_net:
     ipam:
       driver: default
       config:
-        - subnet: 10.10.11.0/24
+        - subnet: 10.10.10.0/24
 "> /var/lib/docker/kl/wirguard/docker-compose.yml;
 cd /var/lib/docker/kl/wirguard;
 docker-compose up -d;
