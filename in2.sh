@@ -129,7 +129,6 @@ mkdir nginx-proxy;
 cd /opt/postal/config/nginx-proxy;
 
 echo "
-version: "3"
 services:
   app:
     image: 'jc21/nginx-proxy-manager:latest'
