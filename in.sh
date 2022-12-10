@@ -25,7 +25,7 @@ echo 'DNSStubListener=no' | sudo tee -a /etc/systemd/resolved.conf;
 ln -sf /run/systemd/resolve/resolv.conf /etc/resolv.conf
 lsof -t -i:53
 systemctl stop systemd-resolved;
-
+mkdir /var/lib/docker/kl;
 mkdir /var/lib/docker/kl/portainer-ce;
 
 # docker run -p 8000:8000 -p 9000:9000 --detach --name=portainer-ce --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v /var/lib/docker/kl/portainer-ce:/data portainer/portainer-ce;
@@ -66,7 +66,7 @@ mkdir /var/lib/docker/kl/wirguard;
 
 
 echo "
-version: "3.8"
+# version: "3.8"
 
 services:
   adwireguard:
@@ -82,8 +82,8 @@ services:
       - '51821:51821/tcp' # wg-easy webUI
     environment:
         # WG-EASY ENVS
-      - WG_HOST=vpn.domainname
-      - PASSWORD=domainnamevpnpw
+      - WG_HOST=vpn.$domainname
+      - PASSWORD=$domainnamevpnpw
       - WG_PORT=51820
       - WG_DEFAULT_ADDRESS=10.10.11.x
       - WG_DEFAULT_DNS=10.10.10.2
