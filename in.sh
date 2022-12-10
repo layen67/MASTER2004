@@ -88,6 +88,8 @@ services:
       - WG_DEFAULT_ADDRESS=10.10.11.x
       - WG_DEFAULT_DNS=10.10.10.2
       - WG_MTU=1420
+      - WG_ALLOWED_IPS=192.0.0.0/8, 10.0.0.0/8
+      - WG_PERSISTENT_KEEPALIVE=25
     volumes:
         # adguard-home volume
       - './adguard/work:/opt/adwireguard/work'
@@ -115,6 +117,7 @@ networks:
 cd /var/lib/docker/kl/wirguard;
 docker-compose up -d;
 sleep 30;
+apt install openresolv;
 
 
 
