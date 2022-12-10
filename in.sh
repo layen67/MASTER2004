@@ -2,6 +2,7 @@
 
 read -p "Please enter domain:" domainname
 read -p "Please enter vpn domain password: " domainnamevpnpw
+read -p "Please enter msql root password: " msqlroot
 
 set -e
 
@@ -119,6 +120,52 @@ docker-compose up -d;
 sleep 30;
 apt install openresolv -y;
 
+cd /opt/
+mkdir postal;
+cd /opt/postal;
+mkdir config;
+cd /opt/postal/config;
+mkdir nginx-proxy;
+cd /opt/postal/config/nginx-proxy;
+
+echo "
+version: "3"
+services:
+  app:
+    image: 'jc21/nginx-proxy-manager:latest'
+    restart: unless-stopped
+    ports:
+      # These ports are in format <host-port>:<container-port>
+      - '80:80' # Public HTTP Port
+      - '443:443' # Public HTTPS Port
+      - '81:81' # Admin Web Port
+      # Add any other Stream port you want to expose
+      # - '21:21' # FTP
+    environment:
+      DB_MYSQL_HOST: "db"
+      DB_MYSQL_PORT: 3306
+      DB_MYSQL_USER: "npm"
+      DB_MYSQL_PASSWORD: "$msqlroot"
+      DB_MYSQL_NAME: "npm"
+      # Uncomment this if IPv6 is not enabled on your host
+      # DISABLE_IPV6: 'true'
+    volumes:
+      - /opt/postal/config/npm/data:/data
+      - /opt/postal/config/npm/letsencrypt:/etc/letsencrypt
+    depends_on:
+      - db
+
+  db:
+    image: 'jc21/mariadb-aria:latest'
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: '$msqlroot'
+      MYSQL_DATABASE: 'npm'
+      MYSQL_USER: 'npm'
+      MYSQL_PASSWORD: '$msqlroot'
+    volumes:
+      - /opt/postal/config/npm/data/mysql:/var/lib/mysql
+"> /opt/postal/config/nginx-proxy/docker-compose.yml;
 
 
 
