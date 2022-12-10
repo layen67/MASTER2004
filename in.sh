@@ -84,7 +84,7 @@ services:
         # WG-EASY ENVS
       - WG_HOST=vpn.$domainname
       - PASSWORD=$domainnamevpnpw
-      - WG_PORT=51820
+      - WG_PORT=51920
       - WG_DEFAULT_ADDRESS=10.10.11.x
       - WG_DEFAULT_DNS=10.10.10.2
       - WG_MTU=1420
