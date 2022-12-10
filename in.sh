@@ -1,4 +1,6 @@
 #!/bin/sh
+vpndomain=$1;
+passwordvpndomain=$2;
 
 set -e
 
@@ -45,7 +47,8 @@ services:
 "> /var/lib/docker/kl/portainer-ce/docker-compose.yml;
 
 cd /var/lib/docker/kl/portainer-ce;
-
+docker-compose up -d;
+sleep 30;
 
 
 mkdir /var/lib/docker/kl/wirguard;
@@ -58,14 +61,14 @@ services:
     environment:
       # ⚠️ Required:
       # Change this to your host's public address
-      - WG_HOST=vpn.elianova.com
+      - WG_HOST=$1
 
       # Optional:
-      - PASSWORD=Thanksgod.01
+      - PASSWORD=$2
       - WG_PORT=51920
       - WG_DEFAULT_ADDRESS=10.8.0.x
       - WG_DEFAULT_DNS=1.1.1.1
-      # - WG_MTU=1380
+      - WG_MTU=1450
       - WG_ALLOWED_IPS=192.0.0.0/8, 10.0.0.0/8
       - WG_PERSISTENT_KEEPALIVE=25
       
@@ -90,3 +93,6 @@ services:
       - net.ipv4.conf.all.src_valid_mark=1
 "> /var/lib/docker/kl/wirguard/docker-compose.yml;
 cd /var/lib/docker/kl/wirguard;
+docker-compose up -d;
+
+
