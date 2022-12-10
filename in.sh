@@ -1,7 +1,7 @@
 #!/bin/sh
 
-read -p "Please enter vpn domain:" domainnamevpn
-read -p "Please enter vpn domain password: ASOSsosa67 " domainnamevpnpw
+read -p "Please enter domain:" domainname
+read -p "Please enter vpn domain password: " domainnamevpnpw
 
 set -e
 
@@ -71,7 +71,7 @@ services:
       - '51821:51821/tcp' # wg-easy webUI
     environment:
         # WG-EASY ENVS
-      - WG_HOST=domainnamevpn
+      - WG_HOST=vpn.domainname
       - PASSWORD=domainnamevpnpw
       - WG_PORT=51820
       - WG_DEFAULT_ADDRESS=10.10.11.x
