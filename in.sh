@@ -13,7 +13,6 @@ sysctl -w net.ipv4.ip_forward=1;
 apt install wireguard wireguard-tools;
 systemctl enable wg-quick@wg0;
 touch /etc/wireguard/wg0.conf;
-apt install resolvconf;
 
 
 mkdir /var/lib/docker/kl/portainer-ce;
