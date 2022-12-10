@@ -18,7 +18,7 @@ apt install resolvconf;
 
 echo '' | sudo tee -a /etc/systemd/resolved.conf;
 echo 'DNS=1.1.1.1' | sudo tee -a /etc/systemd/resolved.conf;
-echo 'Domains=postal.domainname' | sudo tee -a /etc/systemd/resolved.conf;
+echo 'Domains=postal.$domainname' | sudo tee -a /etc/systemd/resolved.conf;
 echo 'MulticastDNS=no' | sudo tee -a /etc/systemd/resolved.conf;
 echo 'DNSStubListener=no' | sudo tee -a /etc/systemd/resolved.conf;
 
