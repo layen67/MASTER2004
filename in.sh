@@ -24,6 +24,7 @@ echo 'DNSStubListener=no' | sudo tee -a /etc/systemd/resolved.conf;
 
 ln -sf /run/systemd/resolve/resolv.conf /etc/resolv.conf
 lsof -t -i:53
+systemctl stop systemd-resolved;
 
 mkdir /var/lib/docker/kl/portainer-ce;
 
