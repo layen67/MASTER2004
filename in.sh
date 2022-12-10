@@ -19,21 +19,32 @@ mkdir /var/lib/docker/kl/portainer-ce;
 
 
 echo "
-version: "3"
-
+version: '3.3'
 services:
-    portainer:
-        image: 'portainer/portainer-ce:latest'
-        restart: always
-        volumes:
-            - /var/run/docker.sock:/var/run/docker.sock
-            - /var/lib/docker/kl/portainer-ce:/data
+    portainer-ce:
         ports:
             - "8000:8000"
             - "9000:9000"
-            #- "9443:9443"
+        container_name: portainer
+        restart: unless-stopped
+        command: -H tcp://agent:9001 --tlsskipverify
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+            - /var/lib/docker/kl/portainer-ce/data:/data
+        image: 'portainer/portainer-ce:latest'
+    
+    agent:
+        container_name: agent
+        image: portainer/agent:latest
+        restart: unless-stopped
+        volumes:
+          - /var/run/docker.sock:/var/run/docker.sock
+          - /var/lib/docker/kl/portainer-ce/agent:/var/lib/docker/volumes
+        ports:
+          - "9001:9001"
 "> /var/lib/docker/kl/portainer-ce/docker-compose.yml;
 
+cd /var/lib/docker/kl/portainer-ce;
 
 
 
