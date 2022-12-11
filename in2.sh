@@ -132,6 +132,7 @@ cd /opt/postal/config/nginx-proxy;
 echo "
 services:
   app:
+    container_name: proxymanager
     image: 'jc21/nginx-proxy-manager:latest'
     restart: unless-stopped
     ports:
