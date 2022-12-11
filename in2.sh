@@ -226,8 +226,8 @@ postal stop;
 sleep 20
 chmod 777 /opt/postal/config/nginx-proxy/npm/letsencrypt/live -R;
 
-sed -i -r "s/.*tls_certificate_path.*/  tls_certificate_path: \/config\/https\/ssl_certs\/postal.$domainname\/production\/signed.crt/g" /opt/postal/config/postal.yml;
-sed -i -r "s/.*tls_private_key_path.*/  tls_private_key_path: \/config\/https\/ssl_certs\/postal.$domainname\/production\/domain.key/g" /opt/postal/config/postal.yml;
+sed -i -r "s/.*tls_certificate_path.*/  #tls_certificate_path: \/config\/https\/ssl_certs\/postal.$domainname\/production\/signed.crt/g" /opt/postal/config/postal.yml;
+sed -i -r "s/.*tls_private_key_path.*/  #tls_private_key_path: \/config\/https\/ssl_certs\/postal.$domainname\/production\/domain.key/g" /opt/postal/config/postal.yml;
 
 sed -i -e "s/ENABLED=0/ENABLED=1/g" /etc/default/spamassassin;
 systemctl restart spamassassin;
