@@ -132,7 +132,6 @@ cd /opt/postal/config/nginx-proxy;
 echo "
 services:
   app:
-    container_name: proxymanager
     image: 'jc21/nginx-proxy-manager:latest'
     restart: unless-stopped
     ports:
@@ -241,5 +240,10 @@ echo '  host: 127.0.0.1' | sudo tee -a /opt/postal/config/postal.yml;
 echo '  port: 783' | sudo tee -a /opt/postal/config/postal.yml;
 
 postal start;
+
+
+docker exec -it nginx-proxy_app_1 bash -c "echo 'rsa-key-size = 4096' | tee -a /etc/letsencrypt.ini"
+docker exec -it nginx-proxy_app_1 sed -i -e "s/elliptic-curve/#elliptic-curve/g" /etc/letsencrypt.ini;
+docker exec -it nginx-proxy_app_1 sed -i -e "s/ecdsa/rsa/g" /etc/letsencrypt.ini;
 
 
