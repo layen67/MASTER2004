@@ -15,25 +15,14 @@ apt install docker-ce -y;
 
 
 
-curl -L https://github.com/docker/compose/releases/download/2.14.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose;
+curl -L https://github.com/docker/compose/releases/download/1.29.2/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose;
 chmod +x /usr/local/bin/docker-compose;
 sysctl -w net.ipv4.ip_forward=1;
 
 apt install wireguard wireguard-tools;
 systemctl enable wg-quick@wg0;
 touch /etc/wireguard/wg0.conf;
-apt install resolvconf;
 
-
-echo '' | sudo tee -a /etc/systemd/resolved.conf;
-echo 'DNS=1.1.1.1' | sudo tee -a /etc/systemd/resolved.conf;
-echo 'Domains=postal.$domainname' | sudo tee -a /etc/systemd/resolved.conf;
-echo 'MulticastDNS=no' | sudo tee -a /etc/systemd/resolved.conf;
-echo 'DNSStubListener=no' | sudo tee -a /etc/systemd/resolved.conf;
-
-ln -sf /run/systemd/resolve/resolv.conf /etc/resolv.conf
-lsof -t -i:53
-systemctl stop systemd-resolved;
 mkdir /var/lib/docker/kl;
 mkdir /var/lib/docker/kl/portainer-ce;
 
