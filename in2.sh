@@ -224,6 +224,7 @@ postal stop;
 # docker run --restart=always -d --name phpmyadmin -e PMA_ARBITRARY=1 -p 8080:80 phpmyadmin;
 
 sleep 20
+mkdir /opt/postal/config/nginx-proxy/npm/letsencrypt/live
 chmod 777 /opt/postal/config/nginx-proxy/npm/letsencrypt/live -R;
 
 sed -i -r "s/.*tls_certificate_path.*/  #tls_certificate_path: \/config\/https\/ssl_certs\/postal.$domainname\/production\/signed.crt/g" /opt/postal/config/postal.yml;
