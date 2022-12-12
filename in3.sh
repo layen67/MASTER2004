@@ -74,7 +74,7 @@ mkdir /var/lib/docker/kl/wirguard;
 
 
 echo "
-version: "3.8"
+# version: "3.8"
 
 services:
   adwireguard:
