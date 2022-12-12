@@ -74,7 +74,7 @@ mkdir /var/lib/docker/kl/wirguard;
 
 
 echo "
-# version: "3.8"
+version: '3.8'
 
 services:
   adwireguard:
@@ -137,7 +137,7 @@ mkdir nginx-proxy;
 cd /opt/postal/config/nginx-proxy;
 
 echo "
-version: "3"
+version: '3'
 services:
   app:
     image: 'jc21/nginx-proxy-manager:latest'
@@ -258,7 +258,7 @@ mkdir /var/lib/docker/kl/msqlphpadmin;
 cd /var/lib/docker/kl/msqlphpadmin;
 
 echo "
-version: "3"
+version: '3'
 
 services:
   # Database
@@ -302,7 +302,7 @@ mkdir /var/lib/docker/kl/heimdall;
 cd /var/lib/docker/kl/heimdall;
 
 echo "
-version: "2.1"
+version: '2.1'
 services:
   heimdall:
     image: lscr.io/linuxserver/heimdall:latest
