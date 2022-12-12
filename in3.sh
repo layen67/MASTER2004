@@ -74,7 +74,7 @@ mkdir /var/lib/docker/kl/wirguard;
 
 
 echo "
-# version: "3.8"
+version: "3.8"
 
 services:
   adwireguard:
@@ -125,7 +125,7 @@ networks:
 "> /var/lib/docker/kl/wirguard/docker-compose.yml;
 cd /var/lib/docker/kl/wirguard;
 docker-compose up -d;
-sleep 30;
+sleep 15;
 apt install openresolv -y;
 
 cd /opt/
@@ -137,6 +137,7 @@ mkdir nginx-proxy;
 cd /opt/postal/config/nginx-proxy;
 
 echo "
+version: "3"
 services:
   app:
     image: 'jc21/nginx-proxy-manager:latest'
@@ -176,7 +177,7 @@ services:
 
 cd /opt/postal/config/nginx-proxy;
 docker-compose up -d;
-sleep 30;
+sleep 15;
 
 
 apt install spamassassin -y;
@@ -230,7 +231,7 @@ command hostnamectl set-hostname postal.$domainname;
 postal stop;
 # docker run --restart=always -d --name phpmyadmin -e PMA_ARBITRARY=1 -p 8080:80 phpmyadmin;
 
-sleep 20
+sleep 15;
 mkdir /opt/postal/config/nginx-proxy/npm/letsencrypt/live
 chmod 777 /opt/postal/config/nginx-proxy/npm/letsencrypt/live -R;
 
@@ -252,4 +253,79 @@ postal start;
 docker exec -it nginx-proxy_app_1 bash -c "echo 'rsa-key-size = 4096' | tee -a /etc/letsencrypt.ini";
 docker exec -it nginx-proxy_app_1 sed -i -e "s/elliptic-curve/#elliptic-curve/g" /etc/letsencrypt.ini;
 docker exec -it nginx-proxy_app_1 sed -i -e "s/ecdsa/rsa/g" /etc/letsencrypt.ini;
+
+mkdir /var/lib/docker/kl/msqlphpadmin;
+cd /var/lib/docker/kl/msqlphpadmin;
+
+echo "
+version: "3"
+
+services:
+  # Database
+  db:
+    platform: linux/x86_64
+    image: mysql:5.7
+    volumes:
+      - ./db_data:/var/lib/mysql
+    restart: always
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: Ele10Kha6172
+      MYSQL_DATABASE: organizr
+      MYSQL_PASSWORD: Ele10Kha6172
+    networks:
+      - mysql-phpmyadmin
+
+  # phpmyadmin
+  phpmyadmin:
+    depends_on:
+      - db
+    image: phpmyadmin
+    restart: always
+    ports:
+      - "8091:80"
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: Ele10Kha6172
+    networks:
+      - mysql-phpmyadmin
+
+networks:
+  mysql-phpmyadmin:
+"> /var/lib/docker/kl/msqlphpadmin/docker-compose.yml;
+docker-compose up -d;
+sleep 15;
+
+
+mkdir /var/lib/docker/kl/heimdall;
+cd /var/lib/docker/kl/heimdall;
+
+echo "
+version: "2.1"
+services:
+  heimdall:
+    image: lscr.io/linuxserver/heimdall:latest
+    container_name: heimdall
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Paris
+    volumes:
+      - ./heimdall:/config
+    ports:
+      - 8087:80
+    restart: unless-stopped
+"> /var/lib/docker/kl/heimdall/docker-compose.yml;
+docker-compose up -d;
+
+
+
+
+
+
+
+
+
+
 
