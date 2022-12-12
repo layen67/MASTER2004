@@ -271,9 +271,9 @@ services:
     ports:
       - "3307:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: Ele10Kha6172
+      MYSQL_ROOT_PASSWORD: $msqlroot
       MYSQL_DATABASE: organizr
-      MYSQL_PASSWORD: Ele10Kha6172
+      MYSQL_PASSWORD: $msqlroot
     networks:
       - mysql-phpmyadmin
 
@@ -287,7 +287,7 @@ services:
       - "8091:80"
     environment:
       PMA_HOST: db
-      MYSQL_ROOT_PASSWORD: Ele10Kha6172
+      MYSQL_ROOT_PASSWORD: $msqlroot
     networks:
       - mysql-phpmyadmin
 
