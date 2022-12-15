@@ -331,6 +331,9 @@ iptables -I DOCKER-USER -i eth0 -p tcp --dport 8088 -j DROP;
 iptables -I DOCKER-USER -i eth0 -p tcp --dport 3000 -j DROP;
 iptables -I DOCKER-USER -i eth0 -p tcp --dport 51821 -j DROP;
 
+apt install iptables-persistent;
+
+
 
 
 
