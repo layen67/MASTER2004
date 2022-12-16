@@ -319,20 +319,6 @@ services:
 "> /var/lib/docker/kl/heimdall/docker-compose.yml;
 docker-compose up -d;
 
-iptables -I DOCKER-USER -i eth0 -p tcp --dport 81 -j DROP;
-iptables -I DOCKER-USER -i eth0 -p tcp --dport 9000 -j DROP;
-iptables -I DOCKER-USER -i eth0 -p tcp --dport 5000 -j DROP;
-iptables -I DOCKER-USER -i eth0 -p tcp --dport 8091 -j DROP;
-iptables -I DOCKER-USER -i eth0 -p tcp --dport 8087 -j DROP;
-iptables -I DOCKER-USER -i eth0 -p tcp --dport 3337 -j DROP;
-iptables -I DOCKER-USER -i eth0 -p tcp --dport 8000 -j DROP;
-iptables -I DOCKER-USER -i eth0 -p tcp --dport 9001 -j DROP;
-iptables -I DOCKER-USER -i eth0 -p tcp --dport 8088 -j DROP;
-iptables -I DOCKER-USER -i eth0 -p tcp --dport 3000 -j DROP;
-iptables -I DOCKER-USER -i eth0 -p tcp --dport 51821 -j DROP;
-
-apt install iptables-persistent;
-
 
 
 
