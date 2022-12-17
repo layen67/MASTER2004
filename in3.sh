@@ -95,7 +95,7 @@ services:
       - PASSWORD=$domainnamevpnpw
       - WG_PORT=51920
       - WG_DEFAULT_ADDRESS=10.8.0.x
-      - WG_DEFAULT_DNS=10.10.10.2
+      - WG_DEFAULT_DNS=1.1.1.1
       - WG_MTU=1420
       - WG_ALLOWED_IPS=192.0.0.0/8, 10.0.0.0/8
       - WG_PERSISTENT_KEEPALIVE=25
