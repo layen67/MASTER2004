@@ -351,8 +351,9 @@ firewall-cmd --add-forward-port=port=465:proto=tcp:toport=25 --permanent;
 firewall-cmd --add-forward-port=port=587:proto=tcp:toport=25 --permanent;
 systemctl restart firewalld;
 iptables -t nat -A POSTROUTING -o wg0 -j MASQUERADE;
-apt install iptables-persistent;
-/sbin/iptables-save > /etc/iptables/rules.v4;
+iptables -t nat -A PREROUTING -d 10.8.0.0/24 -j DNAT --to-destination 172.17.0.1
+#apt install iptables-persistent;
+#/sbin/iptables-save > /etc/iptables/rules.v4;
 
 
 
