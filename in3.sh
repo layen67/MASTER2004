@@ -356,23 +356,52 @@ firewall-cmd --runtime-to-permanent;
 
 
 
+# a finir
+
 
 #iptables -t nat -A PREROUTING -d 10.8.0.0/24 -j DNAT --to-destination 172.17.0.1;
 #iptables -t nat -A PREROUTING -d 172.0.0.0/8 -j DNAT --to-destination 172.17.0.1;
 #apt install iptables-persistent;
 #/sbin/iptables-save > /etc/iptables/rules.v4;
 
+#mkdir /etc/systemd/system/docker.service.d
+#cat << EOF > /etc/systemd/system/docker.service.d/noiptables.conf
+#[Service]
+#ExecStart=
+#ExecStart=/usr/bin/dockerd -H fd:// --iptables=false
+#EOF
+#systemctl daemon-reload
+
+#?????
+#iptables -A FORWARD -i docker0 -o wg0 -j ACCEPT
+#iptables -A FORWARD -i wg0 -o docker0 -j ACCEPT
+#?????
+
+#nano /lib/systemd/system/wgdo.service;
+
+#[Unit]
+#Description=Floating wg
+#After=docker.service
+#BindsTo=docker.service
+
+#[Service]
+#Type=oneshot
+#ExecStart=/etc/init.d/wgdo.sh
+#RemainAfterExit=yes
+
+#[Install]
+#WantedBy=multi-user.target
+
+#systemctl enable wgdo.service;
 
 
+#nano /etc/init.d/wgdo.sh;
+
+#!/bin/sh
+
+#sleep 60;
+#iptables -t nat -A POSTROUTING -o wg0 -j MASQUERADE;
+#iptables -t nat -A PREROUTING -d 10.8.0.2/32 -j DNAT --to-destination 172.17.0.1;
 
 
-
-
-
-
-
-
-
-
-
-
+#chmod +x wgdo.sh;
