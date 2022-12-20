@@ -394,7 +394,6 @@ systemctl enable wgdo.service;
 ##############################################
 
 
-/etc/hosts.allow
 echo '' | sudo tee -a /etc/hosts.allow;
 echo 'sshd: 10.8.0.0/24' | sudo tee -a /etc/hosts.allow;
 
