@@ -351,6 +351,7 @@ firewall-cmd --add-forward-port=port=465:proto=tcp:toport=25 --permanent;
 firewall-cmd --add-forward-port=port=587:proto=tcp:toport=25 --permanent;
 systemctl restart firewalld;
 iptables -t nat -A POSTROUTING -o wg0 -j MASQUERADE;
+iptables -t nat -A PREROUTING -d 10.8.0.2/32 -j DNAT --to-destination 172.17.0.1;
 firewall-cmd --runtime-to-permanent;
 
 
