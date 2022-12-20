@@ -87,13 +87,13 @@ services:
       - '53:53'           # AdGuardHome DNS Port
       - '3000:3000'       # Default Address AdGuardHome WebUI
       - '853:853'         # DNS-TLS
-      - '51920:51820/udp' # wiregaurd port
+      - '9369:51820/udp' # wiregaurd port
       - '51821:51821/tcp' # wg-easy webUI
     environment:
         # WG-EASY ENVS
       - WG_HOST=vpn.$domainname
       - PASSWORD=$domainnamevpnpw
-      - WG_PORT=51920
+      - WG_PORT=9369
       - WG_DEFAULT_ADDRESS=10.8.0.x
       - WG_DEFAULT_DNS=1.1.1.1
       - WG_MTU=1420
@@ -335,29 +335,80 @@ apt-get install -y firewalld;
 systemctl enable firewalld;
 systemctl start firewalld;
 firewall-cmd --permanent --zone=trusted --add-interface=wg0;
-firewall-cmd --permanent --zone=trusted --add-interface=docker0;
+#firewall-cmd --permanent --zone=trusted --add-interface=docker0;
 firewall-cmd --add-port=53/tcp --permanent;
 firewall-cmd --add-port=53/udp --permanent;
 firewall-cmd --add-port=80/tcp --permanent;
 firewall-cmd --add-port=443/tcp --permanent;
-firewall-cmd --add-port=25/tcp --permanent;
-firewall-cmd --add-port=2525/tcp --permanent;
-firewall-cmd --add-port=587/tcp --permanent;
 firewall-cmd --add-port=465/tcp --permanent;
-firewall-cmd --add-port=51920/udp --permanent;
+firewall-cmd --add-port=25/tcp --permanent;
+firewall-cmd --add-port=587/tcp --permanent;
+firewall-cmd --add-port=9369/udp --permanent;
 firewall-cmd --add-masquerade --permanent;
-firewall-cmd --add-forward-port=port=2525:proto=tcp:toport=25 --permanent;
-firewall-cmd --add-forward-port=port=465:proto=tcp:toport=25 --permanent;
 firewall-cmd --add-forward-port=port=587:proto=tcp:toport=25 --permanent;
+firewall-cmd --add-forward-port=port=465:proto=tcp:toport=25 --permanent;
 systemctl restart firewalld;
+
+##########################################################################
+
+mkdir /etc/systemd/system/docker.service.d;
+cat << EOF > /etc/systemd/system/docker.service.d/noiptables.conf
+[Service]
+ExecStart=
+ExecStart=/usr/bin/dockerd -H fd:// --iptables=false
+EOF
+systemctl daemon-reload;
+
+#####################################################
+
+
+cat << EOF > /etc/init.d/wgdo.sh
+#!/bin/sh
+
+#sleep 60;
 iptables -t nat -A POSTROUTING -o wg0 -j MASQUERADE;
 iptables -t nat -A PREROUTING -d 10.8.0.2/32 -j DNAT --to-destination 172.17.0.1;
-firewall-cmd --runtime-to-permanent;
+postal start;
+EOF
+
+chmod +x /etc/init.d/wgdo.sh;
+
+####################################################
+
+cat << EOF > /lib/systemd/system/wgdo.service
+[Unit]
+Description=Floating wg
+After=docker.service
+BindsTo=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/etc/init.d/wgdo.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+EOF
+systemctl enable wgdo.service;
+
+##############################################
+
+
+/etc/hosts.allow
+echo '' | sudo tee -a /etc/hosts.allow;
+echo 'sshd: 10.8.0.0/24' | sudo tee -a /etc/hosts.allow;
+
+echo '' | sudo tee -a /etc/hosts.deny;
+echo 'sshd: ALL' | sudo tee -a /etc/hosts.allow;
+
+
+
+
 
 
 
 # a finir
-
+# firewall-cmd --runtime-to-permanent;
 
 #iptables -t nat -A PREROUTING -d 10.8.0.0/24 -j DNAT --to-destination 172.17.0.1;
 #iptables -t nat -A PREROUTING -d 172.0.0.0/8 -j DNAT --to-destination 172.17.0.1;
