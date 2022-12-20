@@ -321,15 +321,6 @@ docker-compose up -d;
 sleep 10;
 
 
-mkdir /etc/systemd/system/docker.service.d;
-cat << EOF > /etc/systemd/system/docker.service.d/noiptables.conf
-[Service]
-ExecStart=
-ExecStart=/usr/bin/dockerd -H fd:// --iptables=false
-EOF
-systemctl daemon-reload;
-
-
 apt-get update -y;
 apt-get install -y firewalld;
 systemctl enable firewalld;
@@ -398,7 +389,7 @@ echo '' | sudo tee -a /etc/hosts.allow;
 echo 'sshd: 10.8.0.0/24' | sudo tee -a /etc/hosts.allow;
 
 echo '' | sudo tee -a /etc/hosts.deny;
-echo 'sshd: ALL' | sudo tee -a /etc/hosts.allow;
+echo 'sshd: ALL' | sudo tee -a /etc/hosts.deny;
 
 
 
