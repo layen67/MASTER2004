@@ -357,8 +357,10 @@ cat << EOF > /etc/init.d/wgdo.sh
 #!/bin/sh
 
 #sleep 60;
-iptables -t nat -A POSTROUTING -o wg0 -j MASQUERADE;
-iptables -t nat -A PREROUTING -d 10.8.0.2/32 -j DNAT --to-destination 172.17.0.1;
+#iptables -t nat -A POSTROUTING -o wg0 -j MASQUERADE;
+#iptables -t nat -A PREROUTING -d 10.8.0.2/32 -j DNAT --to-destination 172.17.0.1;
+postal start;
+sleep 30;
 postal start;
 EOF
 
